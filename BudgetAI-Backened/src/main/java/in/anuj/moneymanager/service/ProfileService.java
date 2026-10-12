@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,8 +42,8 @@ public class ProfileService {
         String normalizedEmail = normalizeEmail(profileDTO.getEmail());
         profileDTO.setEmail(normalizedEmail);
 
-        if (profileRepository.existsByEmail(normalizedEmail)) {
-            throw new IllegalArgumentException("Email is already registered");
+        if (profileRepository.existsByNormalizedEmail(normalizedEmail)) {
+            throw new DuplicateEmailException("Email is already registered");
         }
 
         ProfileEntity newProfile = toEntity(profileDTO);
@@ -190,6 +191,6 @@ public class ProfileService {
     }
 
     private String normalizeEmail(String email) {
-        return email == null ? "" : email.trim().toLowerCase();
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }
 }

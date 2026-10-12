@@ -2,10 +2,13 @@ package in.anuj.moneymanager.controller;
 
 import in.anuj.moneymanager.dto.AuthDTO;
 import in.anuj.moneymanager.dto.ProfileDto;
+import in.anuj.moneymanager.service.DuplicateEmailException;
 import in.anuj.moneymanager.service.EmailDeliveryException;
 import in.anuj.moneymanager.service.ProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class ProfileController {
+    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
     private  final ProfileService profileService;
     private static final Path PROFILE_IMAGE_DIR = Paths.get("uploads", "profile-images");
     @PostMapping("/register")
@@ -32,13 +36,20 @@ public class ProfileController {
         try {
             ProfileDto registeredProfile = profileService.registerProfile(profileDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredProfile);
-        } catch (IllegalArgumentException exception) {
+        } catch (DuplicateEmailException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
                     "message", exception.getMessage()
             ));
         } catch (EmailDeliveryException exception) {
+            logger.warn("Registration email delivery failed ({})", exception.getClass().getSimpleName());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of(
                     "message", exception.getMessage()
+            ));
+        } catch (Exception exception) {
+            logger.error("Registration failed due to an unexpected server error ({})",
+                    exception.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "message", "Registration failed. Please try again later."
             ));
         }
     }

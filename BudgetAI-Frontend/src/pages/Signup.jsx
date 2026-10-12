@@ -55,7 +55,14 @@ const Signup = () => {
                 setActivationEmail(normalizedEmail);
             }
         } catch(err) {
-            setError(err.response?.data?.message || "Account Already Exits. Please Sign in.");
+            const responseMessage = err.response?.data?.message;
+            if (typeof responseMessage === "string") {
+                setError(responseMessage);
+            } else if (err.response) {
+                setError("Unable to create your account right now. Please try again later.");
+            } else {
+                setError("Unable to reach the server. Please check your connection and try again.");
+            }
         } finally {
             setIsLoading(false);
         }

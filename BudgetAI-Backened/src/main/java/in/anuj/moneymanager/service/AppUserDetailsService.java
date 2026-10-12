@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class AppUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        ProfileEntity existingProfile = profileRepository.findFirstByEmailOrderByIdDesc(email.trim().toLowerCase())
+        ProfileEntity existingProfile = profileRepository.findFirstByEmailOrderByIdDesc(email.trim().toLowerCase(Locale.ROOT))
                 .orElseThrow(() -> new UsernameNotFoundException("Profile not found with email: " + email));
         return User.builder()
                 .username(existingProfile.getEmail())

@@ -21,7 +21,7 @@ public class ProfileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fullName;
-//    @Column(unique = true)
+    @Column(name = "email")
     private String email;
     private String password;
     private String profileImageUrl;
