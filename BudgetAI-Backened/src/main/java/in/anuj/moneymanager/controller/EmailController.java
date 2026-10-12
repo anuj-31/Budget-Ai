@@ -40,7 +40,7 @@ public class EmailController {
         ProfileEntity profile = profileService.getCurrentProfile();
         List<ExpenseDTO> expenses = expenseService.getAllExpensesForCurrentUser();
         String body = buildExpenseEmailBody(profile.getFullName(), expenses);
-        emailService.sendEmail(profile.getEmail(), "Your BudgetAi Expense Summary", body);
+        emailService.sendEmail(profile.getEmail(), "Your BudgetAi Expenses Summary", body);
         return ResponseEntity.ok().body("Expense email sent successfully.");
     }
 
