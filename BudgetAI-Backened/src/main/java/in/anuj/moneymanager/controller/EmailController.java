@@ -31,7 +31,7 @@ public class EmailController {
         ProfileEntity profile = profileService.getCurrentProfile();
         List<IncomeDTO> incomes = incomeService.getAllIncomesForCurrentUser();
         String body = buildIncomeEmailBody(profile.getFullName(), incomes);
-        emailService.sendEmail(profile.getEmail(), "Your Money Manager Income Summary", body);
+        emailService.sendEmail(profile.getEmail(), "Your BudgetAi Income Summary", body);
         return ResponseEntity.ok().body("Income email sent successfully.");
     }
 
@@ -40,14 +40,14 @@ public class EmailController {
         ProfileEntity profile = profileService.getCurrentProfile();
         List<ExpenseDTO> expenses = expenseService.getAllExpensesForCurrentUser();
         String body = buildExpenseEmailBody(profile.getFullName(), expenses);
-        emailService.sendEmail(profile.getEmail(), "Your Money Manager Expense Summary", body);
+        emailService.sendEmail(profile.getEmail(), "Your BudgetAi Expense Summary", body);
         return ResponseEntity.ok().body("Expense email sent successfully.");
     }
 
     private String buildIncomeEmailBody(String fullName, List<IncomeDTO> incomes) {
         StringBuilder body = new StringBuilder();
         body.append("<p>Hi ").append(fullName).append(",</p>");
-        body.append("<p>Here is your income summary from Money Manager:</p>");
+        body.append("<p>Here is your income summary from BudgetAi:</p>");
 
         if (incomes.isEmpty()) {
             body.append("<p><strong>No income records found.</strong></p>");
@@ -73,14 +73,14 @@ public class EmailController {
             body.append("</table>");
         }
 
-        body.append("<p>Thanks,<br/>Money Manager Team</p>");
+        body.append("<p>Thanks,<br/>BudgetAi Team</p>");
         return body.toString();
     }
 
     private String buildExpenseEmailBody(String fullName, List<ExpenseDTO> expenses) {
         StringBuilder body = new StringBuilder();
         body.append("<p>Hi ").append(fullName).append(",</p>");
-        body.append("<p>Here is your expense summary from Money Manager:</p>");
+        body.append("<p>Here is your expense summary from BudgetAi:</p>");
 
         if (expenses.isEmpty()) {
             body.append("<p><strong>No expense records found.</strong></p>");
@@ -106,7 +106,7 @@ public class EmailController {
             body.append("</table>");
         }
 
-        body.append("<p>Thanks,<br/>Money Manager Team</p>");
+        body.append("<p>Thanks,<br/>BudgetAi Team</p>");
         return body.toString();
     }
 
